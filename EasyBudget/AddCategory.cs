@@ -30,7 +30,7 @@ namespace EasyBudget
             {
                 if (Categories.Add(name.Text, double.Parse(capacity.Text)))
                 {
-                    Form1.RefreshDisplay();
+                    Main.RefreshDisplay();
                     this.Close();
                 }
                 else

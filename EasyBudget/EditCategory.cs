@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace EasyBudget
 {
-    public partial class AddSpending : Form
+    public partial class EditCategory : Form
     {
         private string previous_text;
         private long category;
 
-        public AddSpending(long Category = -1)
+        public EditCategory(long Category = -1)
         {
             this.category = Category;
 
@@ -35,6 +35,14 @@ namespace EasyBudget
                 }
             else
                 comboBox1.Text = "";
+
+            textBox1.Text = "0.00";
+            if (Category != -1)
+            {
+                var results = Categories.GetField<double>("capacity", "id = " + Category);
+                if (results.Count() > 0)
+                    textBox1.Text = results.ElementAt(0).ToString();
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -52,9 +60,9 @@ namespace EasyBudget
             {
                 long cat_id = Categories.GetField<long>("id", "name = '" + comboBox1.Text + '\'', 1).ElementAt(0);
                 Main.execute_db_command(string.Format
-                ("insert into spend (category, amount) values ({0}, {1})",
-                cat_id,
-                textBox1.Text));
+                ("UPDATE category SET capacity={0} WHERE name='{1}'",
+                textBox1.Text,
+                comboBox1.Text));
                 Main.RefreshDisplay();
                 this.Close();
             }
@@ -66,5 +74,15 @@ namespace EasyBudget
         {
             this.Close();
         }
+
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            var results = Categories.GetField<double>("capacity", "name = '" + comboBox1.Text + '\'');
+            if (results.Count() > 0)
+                textBox1.Text = results.ElementAt(0).ToString();
+            else
+                textBox1.Text = "error";
+        }
+
     }
 }

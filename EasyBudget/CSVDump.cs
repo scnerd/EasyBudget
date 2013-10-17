@@ -26,7 +26,7 @@ namespace EasyBudget
                 StreamWriter write = new StreamWriter(File.OpenWrite(saveFileDialog1.FileName));
                 write.WriteLine("Category,Amount,Timestamp");
 
-                var data = Form1.execute_db_query("select name, amount, timestamp from spend join category on (category.id = spend.category)");
+                var data = Main.execute_db_query("select name, amount, timestamp from spend join category on (category.id = spend.category)");
                 while (data.Read())
                     write.WriteLine(string.Format("{0},{1},{2}", data[0], data[1], data[2]));
 
@@ -43,7 +43,7 @@ namespace EasyBudget
                 StreamWriter write = new StreamWriter(File.OpenWrite(saveFileDialog1.FileName));
                 write.WriteLine("Category,Amount,Timestamp");
 
-                var data = Form1.execute_db_query("select name, amount, timestamp from spend join category on (category.id = spend.category) where timestamp >= date('now','-" + Constants.DAYS_PER_MONTH + " days')");
+                var data = Main.execute_db_query("select name, amount, timestamp from spend join category on (category.id = spend.category) where timestamp >= date('now','-" + Constants.DAYS_PER_MONTH + " days')");
                 while (data.Read())
                     write.WriteLine(string.Format("{0},{1},{2}", data[0], data[1], data[2]));
 

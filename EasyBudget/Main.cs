@@ -11,12 +11,12 @@ using System.Data.SQLite;
 
 namespace EasyBudget
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
 
         internal static SQLiteConnection database;
 
-        private static Form1 current_instance;
+        private static Main current_instance;
 
         public static bool execute_db_command(string cmd)
         {
@@ -45,7 +45,7 @@ namespace EasyBudget
             }
         }
 
-        public Form1()
+        public Main()
         {
             //Don't allow multiple instances to run
             var me = System.Diagnostics.Process.GetCurrentProcess();
@@ -119,6 +119,7 @@ namespace EasyBudget
             }
             rows.Close();
             context_menu.Items.Add(new ToolStripButton("Add Category", null, (o, a) => new AddCategory().ShowDialog()));
+            context_menu.Items.Add(new ToolStripButton("Edit Category", null, (o, a) => new EditCategory().ShowDialog()));
             context_menu.Items.Add(new ToolStripButton("Add Purchase", null, (o, a) => new AddSpending().ShowDialog()));
             context_menu.Items.Add(new ToolStripButton("Dump CSV Files", null, (o, a) => new CSVDump().ShowDialog()));
             context_menu.Items.Add(new ToolStripButton("Exit", null, (o, a) => Application.Exit()));
@@ -149,6 +150,20 @@ namespace EasyBudget
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             database.Close();
+#if DEBUG
+            System.IO.File.Delete(Constants.DATABASE);
+#endif
+        }
+
+        private void tray_icon_MouseUp(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == MouseButtons.Left)
+            {
+                System.Reflection.MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                mi.Invoke(tray_icon, null);
+            }
+
         }
     }
 }

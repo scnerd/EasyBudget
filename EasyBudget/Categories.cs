@@ -12,7 +12,7 @@ namespace EasyBudget
     {
         public static bool Add(string Name, double Capacity)
         {
-            return Form1.execute_db_command(string.Format
+            return Main.execute_db_command(string.Format
             ("insert into category (name, capacity) values (\'{0}\', {1})", Name, Capacity));
         }
 
@@ -41,13 +41,13 @@ namespace EasyBudget
 
         private static System.Data.SQLite.SQLiteDataReader query(string cmd, params object[] options)
         {
-            return Form1.execute_db_query(string.Format(cmd, options));
+            return Main.execute_db_query(string.Format(cmd, options));
         }
 
         private static IEnumerable<T> query<T>(string cmd, params object[] options)
         {
             List<T> list = new List<T>();
-            var q = Form1.execute_db_query(string.Format(cmd, options));
+            var q = Main.execute_db_query(string.Format(cmd, options));
             while (q.Read())
             {
                 list.Add((T)q[0]);
